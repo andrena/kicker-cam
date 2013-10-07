@@ -1,4 +1,4 @@
-package de.andrena.balotelli;
+package de.andrena.kickercam;
 
 import java.io.File;
 import java.io.FileInputStream;
