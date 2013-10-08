@@ -10,13 +10,14 @@ import org.junit.runners.model.Statement;
 public class TestEnvironment extends ExternalResource implements Environment {
 
 	private CommandMock recordCommandMock = new CommandMock();
-	private CommandMock playCommandMock = new CommandMock();
-	private CommandMock rmCommandMock = new CommandMock();
+	private CommandFactoryMock playCommandMock = new CommandFactoryMock();
+	private CommandFactoryMock rmCommandMock = new CommandFactoryMock();
 	private CatCommandFactoryMock catCommandFactoryMock = new CatCommandFactoryMock();
 	private GpioMock gpioMock = new GpioMock();
 	private File playlistFile;
 
 	private TemporaryFolder temporaryFolder = new TemporaryFolder();
+	private PlaybackQueue playbackQueue;
 
 	@Override
 	public Statement apply(Statement base, Description description) {
@@ -26,6 +27,7 @@ public class TestEnvironment extends ExternalResource implements Environment {
 	@Override
 	protected void before() throws Throwable {
 		playlistFile = temporaryFolder.newFile();
+		playbackQueue = new PlaybackQueue(this);
 	}
 
 	@Override
@@ -34,12 +36,12 @@ public class TestEnvironment extends ExternalResource implements Environment {
 	}
 
 	@Override
-	public CommandMock getPlayCommand() {
+	public CommandFactoryMock getPlayCommand() {
 		return playCommandMock;
 	}
 
 	@Override
-	public CommandMock getRmCommand() {
+	public CommandFactoryMock getRmCommand() {
 		return rmCommandMock;
 	}
 
@@ -56,6 +58,22 @@ public class TestEnvironment extends ExternalResource implements Environment {
 	@Override
 	public File getPlaylistFile() {
 		return playlistFile;
+	}
+
+	@Override
+	public PlaybackQueue getPlaybackQueue() {
+		return playbackQueue;
+	}
+
+	public void waitForQueueToFinish() {
+		System.out.println("waiting on " + playbackQueue);
+		while (playbackQueue.isRunning()) {
+			try {
+				Thread.sleep(20);
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
+		}
 	}
 
 }

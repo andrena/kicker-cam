@@ -5,6 +5,16 @@ import java.io.OutputStream;
 
 public class ProcessMock extends Process {
 
+	private final int delayMillis;
+
+	public ProcessMock() {
+		delayMillis = 0;
+	}
+
+	public ProcessMock(int delayMillis) {
+		this.delayMillis = delayMillis;
+	}
+
 	@Override
 	public void destroy() {
 	}
@@ -31,6 +41,9 @@ public class ProcessMock extends Process {
 
 	@Override
 	public int waitFor() throws InterruptedException {
+		if (delayMillis > 0) {
+			Thread.sleep(delayMillis);
+		}
 		return 0;
 	}
 

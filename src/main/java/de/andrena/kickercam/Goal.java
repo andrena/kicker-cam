@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
@@ -12,20 +14,18 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.andrena.kickercam.command.CatCommandFactory;
-import de.andrena.kickercam.command.Command;
 
 public class Goal {
 	private static Logger LOGGER = LogManager.getLogger(Goal.class);
 
 	private final CatCommandFactory catCommand;
-	private final Command playCommand;
-	private final Command rmCommand;
 	private final File playlistFile;
 
+	private final PlaybackQueue playbackQueue;
+
 	public Goal(Environment environment) {
+		playbackQueue = environment.getPlaybackQueue();
 		catCommand = environment.getCatCommandFactory();
-		playCommand = environment.getPlayCommand();
-		rmCommand = environment.getRmCommand();
 		playlistFile = environment.getPlaylistFile();
 	}
 
@@ -34,15 +34,19 @@ public class Goal {
 			fireTriggerUnsafe();
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
-			throw new RuntimeException("Goal failed.", e);
+			throw new RuntimeException("Goal playback failed.", e);
 		}
 	}
 
 	private void fireTriggerUnsafe() throws Exception {
-		LOGGER.info("Goal scored.");
-		catCommand.run(getPlaylistFiles()).waitFor();
-		playCommand.run().waitFor();
-		rmCommand.run().waitFor();
+		String mergedVideoFilename = createTimestampedFilename();
+		LOGGER.info("Goal {} scored.", mergedVideoFilename);
+		catCommand.run(getPlaylistFiles(), mergedVideoFilename).waitFor();
+		playbackQueue.queue(mergedVideoFilename);
+	}
+
+	private String createTimestampedFilename() {
+		return new SimpleDateFormat("yyyyMMMdd_HHmmss-SSS").format(new Date()) + ".mp4";
 	}
 
 	private List<String> getPlaylistFiles() throws IOException, FileNotFoundException {

@@ -1,14 +1,15 @@
 package de.andrena.kickercam;
 
-import de.andrena.kickercam.command.Command;
+import de.andrena.kickercam.command.CommandException;
+import de.andrena.kickercam.command.CommandFactory;
 
-public class CommandMock implements Command {
+public class CommandFactoryMock implements CommandFactory {
 
 	private boolean hasRun;
 	private int delayMillis;
 
 	@Override
-	public Process run() {
+	public Process run(String parameter) throws CommandException {
 		hasRun = true;
 		return new ProcessMock(delayMillis);
 	}

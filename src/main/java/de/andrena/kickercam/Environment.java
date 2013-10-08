@@ -4,19 +4,22 @@ import java.io.File;
 
 import de.andrena.kickercam.command.CatCommandFactory;
 import de.andrena.kickercam.command.Command;
+import de.andrena.kickercam.command.CommandFactory;
 
 public interface Environment {
 
 	Command getRecordCommand();
 
-	Command getPlayCommand();
+	CommandFactory getPlayCommand();
 
-	Command getRmCommand();
+	CommandFactory getRmCommand();
 
 	CatCommandFactory getCatCommandFactory();
 
 	Gpio getGpio();
 
 	File getPlaylistFile();
+
+	PlaybackQueue getPlaybackQueue();
 
 }

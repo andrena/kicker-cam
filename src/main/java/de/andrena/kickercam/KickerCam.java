@@ -15,8 +15,8 @@ public class KickerCam {
 
 	public KickerCam(Environment environment) {
 		goalFactory = new GoalFactory(environment);
-		this.gpio = environment.getGpio();
-		this.recordCommand = environment.getRecordCommand();
+		gpio = environment.getGpio();
+		recordCommand = environment.getRecordCommand();
 	}
 
 	public void start() {
