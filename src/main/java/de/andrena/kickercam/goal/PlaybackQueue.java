@@ -1,4 +1,4 @@
-package de.andrena.kickercam;
+package de.andrena.kickercam.goal;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.andrena.kickercam.Environment;
 import de.andrena.kickercam.command.CommandException;
 import de.andrena.kickercam.command.CommandFactory;
 

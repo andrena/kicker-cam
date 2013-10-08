@@ -1,4 +1,4 @@
-package de.andrena.kickercam;
+package de.andrena.kickercam.goal;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
@@ -10,6 +10,10 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import de.andrena.kickercam.TestEnvironment;
+
+import de.andrena.kickercam.goal.Goal;
 
 public class GoalTest {
 

@@ -9,6 +9,9 @@ import de.andrena.kickercam.command.PlayCommandFactory;
 import de.andrena.kickercam.command.RecordCommand;
 import de.andrena.kickercam.command.RmCommandFactory;
 import de.andrena.kickercam.command.ShellCatCommandFactory;
+import de.andrena.kickercam.goal.PlaybackQueue;
+import de.andrena.kickercam.gpio.Gpio;
+import de.andrena.kickercam.gpio.GpioAdapter;
 
 public class RaspberryPiEnvironment implements Environment {
 	private static final File WORKING_DIRECTORY = new File("/home/balotelli/kicker");

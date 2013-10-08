@@ -1,5 +1,7 @@
 package de.andrena.kickercam;
 
+import de.andrena.kickercam.gpio.Gpio;
+
 public class GpioMock implements Gpio {
 	private boolean pin3Enabled;
 	private Runnable listenerAction;

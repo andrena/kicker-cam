@@ -1,4 +1,4 @@
-package de.andrena.kickercam;
+package de.andrena.kickercam.gpio;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;

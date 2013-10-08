@@ -1,4 +1,4 @@
-package de.andrena.kickercam;
+package de.andrena.kickercam.gpio;
 
 public interface Gpio {
 

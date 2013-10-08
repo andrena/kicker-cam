@@ -1,4 +1,4 @@
-package de.andrena.kickercam;
+package de.andrena.kickercam.goal;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,6 +13,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.andrena.kickercam.Environment;
 import de.andrena.kickercam.command.CatCommandFactory;
 
 public class Goal {

@@ -1,4 +1,6 @@
-package de.andrena.kickercam;
+package de.andrena.kickercam.goal;
+
+import de.andrena.kickercam.Environment;
 
 public class GoalFactory implements Runnable {
 	private final Environment environment;

@@ -7,6 +7,8 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
+import de.andrena.kickercam.goal.PlaybackQueue;
+
 public class TestEnvironment extends ExternalResource implements Environment {
 
 	private CommandMock recordCommandMock = new CommandMock();

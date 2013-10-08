@@ -5,6 +5,8 @@ import org.apache.logging.log4j.Logger;
 
 import de.andrena.kickercam.command.Command;
 import de.andrena.kickercam.command.CommandException;
+import de.andrena.kickercam.goal.GoalFactory;
+import de.andrena.kickercam.gpio.Gpio;
 
 public class KickerCam {
 	private static final Logger LOGGER = LogManager.getLogger(KickerCam.class);

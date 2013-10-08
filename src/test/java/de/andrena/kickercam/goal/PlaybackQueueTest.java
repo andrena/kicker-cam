@@ -1,7 +1,11 @@
-package de.andrena.kickercam;
+package de.andrena.kickercam.goal;
 
 import org.junit.Rule;
 import org.junit.Test;
+
+import de.andrena.kickercam.TestEnvironment;
+
+import de.andrena.kickercam.goal.PlaybackQueue;
 
 public class PlaybackQueueTest {
 	@Rule

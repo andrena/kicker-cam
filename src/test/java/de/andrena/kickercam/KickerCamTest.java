@@ -8,6 +8,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import de.andrena.kickercam.goal.GoalFactory;
+
 public class KickerCamTest {
 	@Rule
 	public TestEnvironment environment = new TestEnvironment();
