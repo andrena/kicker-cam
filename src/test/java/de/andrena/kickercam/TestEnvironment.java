@@ -8,6 +8,10 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
 import de.andrena.kickercam.goal.PlaybackQueue;
+import de.andrena.kickercam.mock.CatCommandFactoryMock;
+import de.andrena.kickercam.mock.CommandFactoryMock;
+import de.andrena.kickercam.mock.CommandMock;
+import de.andrena.kickercam.mock.GpioMock;
 
 public class TestEnvironment extends ExternalResource implements Environment {
 

@@ -1,4 +1,4 @@
-package de.andrena.kickercam;
+package de.andrena.kickercam.mock;
 
 import java.util.List;
 
@@ -19,6 +19,10 @@ public class CatCommandFactoryMock implements CatCommandFactory {
 
 	public boolean hasRun() {
 		return hasRun;
+	}
+
+	public void resetHasRun() {
+		hasRun = false;
 	}
 
 	public List<String> getLastPlaylistFiles() {

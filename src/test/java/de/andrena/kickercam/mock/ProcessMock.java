@@ -1,4 +1,4 @@
-package de.andrena.kickercam;
+package de.andrena.kickercam.mock;
 
 import java.io.InputStream;
 import java.io.OutputStream;

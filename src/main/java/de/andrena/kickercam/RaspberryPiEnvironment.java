@@ -58,4 +58,5 @@ public class RaspberryPiEnvironment implements Environment {
 	public PlaybackQueue getPlaybackQueue() {
 		return playbackQueue;
 	}
+
 }
