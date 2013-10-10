@@ -10,8 +10,10 @@ import de.andrena.kickercam.command.RecordCommand;
 import de.andrena.kickercam.command.RmCommandFactory;
 import de.andrena.kickercam.command.ShellCatCommandFactory;
 import de.andrena.kickercam.goal.PlaybackQueue;
+import de.andrena.kickercam.goal.UploadQueue;
 import de.andrena.kickercam.gpio.Gpio;
 import de.andrena.kickercam.gpio.GpioAdapter;
+import de.andrena.kickercam.youtube.YoutubeVideoUploader;
 
 public class RaspberryPiEnvironment implements Environment {
 	private static final File WORKING_DIRECTORY = new File("/home/balotelli/kicker");
@@ -22,7 +24,9 @@ public class RaspberryPiEnvironment implements Environment {
 	private RmCommandFactory rmCommandFactory = new RmCommandFactory(WORKING_DIRECTORY);
 	private ShellCatCommandFactory catCommandFactory = new ShellCatCommandFactory(WORKING_DIRECTORY);
 	private GpioAdapter gpioAdapter = new GpioAdapter();
-	private PlaybackQueue playbackQueue = new PlaybackQueue(this);
+	private YoutubeVideoUploader videoUploader = new YoutubeVideoUploader(WORKING_DIRECTORY);
+	private UploadQueue uploadQueue = new UploadQueue(rmCommandFactory, videoUploader);
+	private PlaybackQueue playbackQueue = new PlaybackQueue(playCommandFactory, uploadQueue);
 
 	@Override
 	public Command getRecordCommand() {
@@ -57,6 +61,11 @@ public class RaspberryPiEnvironment implements Environment {
 	@Override
 	public PlaybackQueue getPlaybackQueue() {
 		return playbackQueue;
+	}
+
+	@Override
+	public UploadQueue getUploadQueue() {
+		return uploadQueue;
 	}
 
 }

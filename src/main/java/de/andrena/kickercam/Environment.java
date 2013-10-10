@@ -6,6 +6,7 @@ import de.andrena.kickercam.command.CatCommandFactory;
 import de.andrena.kickercam.command.Command;
 import de.andrena.kickercam.command.CommandFactory;
 import de.andrena.kickercam.goal.PlaybackQueue;
+import de.andrena.kickercam.goal.UploadQueue;
 import de.andrena.kickercam.gpio.Gpio;
 
 public interface Environment {
@@ -24,4 +25,5 @@ public interface Environment {
 
 	PlaybackQueue getPlaybackQueue();
 
+	UploadQueue getUploadQueue();
 }

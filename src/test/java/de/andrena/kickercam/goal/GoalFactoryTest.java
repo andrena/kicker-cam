@@ -11,7 +11,7 @@ import de.andrena.kickercam.TestEnvironment;
 
 public class GoalFactoryTest {
 
-	private static final int DISREGARD_FRAME = 50;
+	private static final int DISREGARD_FRAME = 200;
 
 	@Rule
 	public TestEnvironment environment = new TestEnvironment();

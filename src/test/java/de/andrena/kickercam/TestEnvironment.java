@@ -8,10 +8,12 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
 import de.andrena.kickercam.goal.PlaybackQueue;
+import de.andrena.kickercam.goal.UploadQueue;
 import de.andrena.kickercam.mock.CatCommandFactoryMock;
 import de.andrena.kickercam.mock.CommandFactoryMock;
 import de.andrena.kickercam.mock.CommandMock;
 import de.andrena.kickercam.mock.GpioMock;
+import de.andrena.kickercam.mock.VideoUploaderMock;
 
 public class TestEnvironment extends ExternalResource implements Environment {
 
@@ -24,6 +26,8 @@ public class TestEnvironment extends ExternalResource implements Environment {
 
 	private TemporaryFolder temporaryFolder = new TemporaryFolder();
 	private PlaybackQueue playbackQueue;
+	private UploadQueue uploadQueue;
+	private VideoUploaderMock videoUploaderMock;
 
 	@Override
 	public Statement apply(Statement base, Description description) {
@@ -32,8 +36,12 @@ public class TestEnvironment extends ExternalResource implements Environment {
 
 	@Override
 	protected void before() throws Throwable {
-		playlistFile = temporaryFolder.newFile();
-		playbackQueue = new PlaybackQueue(this);
+		File tempFolder = temporaryFolder.newFolder();
+		playlistFile = new File(tempFolder, "playlist.file");
+		playlistFile.createNewFile();
+		videoUploaderMock = new VideoUploaderMock();
+		uploadQueue = new UploadQueue(rmCommandMock, videoUploaderMock);
+		playbackQueue = new PlaybackQueue(playCommandMock, uploadQueue);
 	}
 
 	@Override
@@ -80,6 +88,11 @@ public class TestEnvironment extends ExternalResource implements Environment {
 				throw new RuntimeException(e);
 			}
 		}
+	}
+
+	@Override
+	public UploadQueue getUploadQueue() {
+		return uploadQueue;
 	}
 
 }
