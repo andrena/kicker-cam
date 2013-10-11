@@ -46,7 +46,7 @@ public abstract class Queue<T> {
 			LOGGER.info("Retrieving next element from queue.");
 			return queue.remove(0);
 		}
-		LOGGER.info("Stopping Playback queue.");
+		LOGGER.info("Stopping {} queue.", getClass().getSimpleName());
 		running = false;
 		return null;
 	}

@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
 
 import com.google.api.client.auth.oauth2.Credential;
@@ -29,6 +28,7 @@ import com.google.api.services.youtube.model.Video;
 import com.google.api.services.youtube.model.VideoSnippet;
 import com.google.api.services.youtube.model.VideoStatus;
 
+import de.andrena.kickercam.goal.GoalId;
 import de.andrena.kickercam.goal.VideoUploader;
 
 /**
@@ -66,8 +66,8 @@ public class YoutubeVideoUploader implements VideoUploader {
 	}
 
 	@Override
-	public void uploadVideo(String videoFilename) {
-		File videoFile = new File(workingDirectory, videoFilename);
+	public void uploadVideo(GoalId goalId) {
+		File videoFile = new File(workingDirectory, goalId.getFilename());
 		List<String> scopes = Arrays.asList(YouTubeScopes.YOUTUBE_UPLOAD, YouTubeScopes.YOUTUBEPARTNER,
 				YouTubeScopes.YOUTUBE);
 
@@ -83,8 +83,7 @@ public class YoutubeVideoUploader implements VideoUploader {
 			videoObjectDefiningMetadata.setStatus(status);
 
 			VideoSnippet snippet = new VideoSnippet();
-			Calendar cal = Calendar.getInstance();
-			snippet.setTitle("Goal " + cal.getTime());
+			snippet.setTitle(goalId.getTitle());
 			videoObjectDefiningMetadata.setSnippet(snippet);
 
 			InputStreamContent mediaContent = new InputStreamContent(VIDEO_FILE_FORMAT,

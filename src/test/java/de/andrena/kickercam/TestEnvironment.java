@@ -1,6 +1,7 @@
 package de.andrena.kickercam;
 
 import java.io.File;
+import java.sql.SQLException;
 
 import org.junit.rules.ExternalResource;
 import org.junit.rules.TemporaryFolder;
@@ -24,24 +25,28 @@ public class TestEnvironment extends ExternalResource implements Environment {
 	private GpioMock gpioMock = new GpioMock();
 	private File playlistFile;
 
-	private TemporaryFolder temporaryFolder = new TemporaryFolder();
+	private TemporaryFolder temporaryFolderRule = new TemporaryFolder();
 	private PlaybackQueue playbackQueue;
 	private UploadQueue uploadQueue;
 	private VideoUploaderMock videoUploaderMock;
+	private File temporaryFolder;
+	private SqliteDatabase database;
 
 	@Override
 	public Statement apply(Statement base, Description description) {
-		return temporaryFolder.apply(super.apply(base, description), description);
+		return temporaryFolderRule.apply(super.apply(base, description), description);
 	}
 
 	@Override
 	protected void before() throws Throwable {
-		File tempFolder = temporaryFolder.newFolder();
-		playlistFile = new File(tempFolder, "playlist.file");
+		temporaryFolder = temporaryFolderRule.newFolder();
+		playlistFile = new File(temporaryFolder, "playlist.file");
 		playlistFile.createNewFile();
 		videoUploaderMock = new VideoUploaderMock();
 		uploadQueue = new UploadQueue(rmCommandMock, videoUploaderMock);
 		playbackQueue = new PlaybackQueue(playCommandMock, uploadQueue);
+		database = new SqliteDatabase(temporaryFolder);
+		initializeDatabase(database);
 	}
 
 	@Override
@@ -80,7 +85,6 @@ public class TestEnvironment extends ExternalResource implements Environment {
 	}
 
 	public void waitForQueueToFinish() {
-		System.out.println("waiting on " + playbackQueue);
 		while (playbackQueue.isRunning()) {
 			try {
 				Thread.sleep(20);
@@ -95,4 +99,17 @@ public class TestEnvironment extends ExternalResource implements Environment {
 		return uploadQueue;
 	}
 
+	@Override
+	public Database getDatabase() {
+		return database;
+	}
+
+	private void initializeDatabase(SqliteDatabase database) {
+		try {
+			database.createStatement().execute(
+					"CREATE TABLE goal (id INTEGER PRIMARY KEY AUTOINCREMENT, scored DATETIME NOT NULL);");
+		} catch (SQLException e) {
+			throw new RuntimeException("Error creating test database.", e);
+		}
+	}
 }

@@ -27,6 +27,7 @@ public class RaspberryPiEnvironment implements Environment {
 	private YoutubeVideoUploader videoUploader = new YoutubeVideoUploader(WORKING_DIRECTORY);
 	private UploadQueue uploadQueue = new UploadQueue(rmCommandFactory, videoUploader);
 	private PlaybackQueue playbackQueue = new PlaybackQueue(playCommandFactory, uploadQueue);
+	private SqliteDatabase database = new SqliteDatabase(WORKING_DIRECTORY);;
 
 	@Override
 	public Command getRecordCommand() {
@@ -66,6 +67,11 @@ public class RaspberryPiEnvironment implements Environment {
 	@Override
 	public UploadQueue getUploadQueue() {
 		return uploadQueue;
+	}
+
+	@Override
+	public Database getDatabase() {
+		return database;
 	}
 
 }

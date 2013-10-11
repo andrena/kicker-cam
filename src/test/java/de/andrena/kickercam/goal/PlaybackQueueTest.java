@@ -1,5 +1,7 @@
 package de.andrena.kickercam.goal;
 
+import java.util.Date;
+
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -12,7 +14,7 @@ public class PlaybackQueueTest {
 	@Test
 	public void queueTwo() throws Exception {
 		PlaybackQueue queue = new PlaybackQueue(environment.getPlayCommand(), environment.getUploadQueue());
-		queue.queue("1");
-		queue.queue("2");
+		queue.queue(new GoalId(new Date(), 1));
+		queue.queue(new GoalId(new Date(), 2));
 	}
 }

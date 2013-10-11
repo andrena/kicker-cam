@@ -1,10 +1,16 @@
 package de.andrena.kickercam.goal;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
@@ -12,8 +18,6 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import de.andrena.kickercam.TestEnvironment;
-
-import de.andrena.kickercam.goal.Goal;
 
 public class GoalTest {
 
@@ -46,6 +50,25 @@ public class GoalTest {
 		goal.fire();
 		createGoal().fire();
 		assertThat(environment.getCatCommandFactory().getLastPlaylistFiles(), contains(CORRECT_PLAYLIST));
+	}
+
+	@Test
+	public void goals_GetStoredInDatabase() throws Exception {
+		Date before = new Date(System.currentTimeMillis());
+		goal.fire();
+		createGoal().fire();
+		Date after = new Date(System.currentTimeMillis());
+		ResultSet query = environment.getDatabase().createStatement()
+				.executeQuery("SELECT id, scored FROM goal ORDER BY id;");
+		assertDatabaseEntry(before, after, query, 1);
+		assertDatabaseEntry(before, after, query, 2);
+	}
+
+	private void assertDatabaseEntry(Date before, Date after, ResultSet query, int expectedId)
+			throws SQLException {
+		query.next();
+		assertThat(query.getInt(1), is(expectedId));
+		assertThat(query.getDate(2), allOf(greaterThanOrEqualTo(before), lessThanOrEqualTo(after)));
 	}
 
 	private Goal createGoal() {

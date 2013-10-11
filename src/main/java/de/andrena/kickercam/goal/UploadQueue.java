@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 import de.andrena.kickercam.command.CommandException;
 import de.andrena.kickercam.command.CommandFactory;
 
-public class UploadQueue extends Queue<String> {
+public class UploadQueue extends Queue<GoalId> {
 	static final Logger LOGGER = LogManager.getLogger(PlaybackQueue.class);
 
 	private CommandFactory rmCommand;
@@ -18,12 +18,12 @@ public class UploadQueue extends Queue<String> {
 	}
 
 	@Override
-	protected void execute(String videoFilename) {
+	protected void execute(GoalId goalId) {
 		try {
-			LOGGER.trace("Uploading video: {}", videoFilename);
-			videoUploader.uploadVideo(videoFilename);
-			LOGGER.trace("Finished uploading video: {}", videoFilename);
-			rmCommand.run(videoFilename);
+			LOGGER.trace("Uploading video: {}", goalId.getFilename());
+			videoUploader.uploadVideo(goalId);
+			LOGGER.trace("Finished uploading video: {}", goalId.getFilename());
+			rmCommand.run(goalId.getFilename());
 		} catch (CommandException e) {
 			LOGGER.error("Uploading failed.", e);
 		}

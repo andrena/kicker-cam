@@ -26,4 +26,6 @@ public interface Environment {
 	PlaybackQueue getPlaybackQueue();
 
 	UploadQueue getUploadQueue();
+
+	Database getDatabase();
 }
