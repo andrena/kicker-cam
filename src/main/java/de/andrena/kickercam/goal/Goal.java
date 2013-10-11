@@ -16,12 +16,13 @@ import org.apache.logging.log4j.Logger;
 
 import de.andrena.kickercam.Database;
 import de.andrena.kickercam.Environment;
-import de.andrena.kickercam.command.CatCommandFactory;
+import de.andrena.kickercam.command.CatParameter;
+import de.andrena.kickercam.command.CommandFactory;
 
 public class Goal {
 	private static Logger LOGGER = LogManager.getLogger(Goal.class);
 
-	private final CatCommandFactory catCommand;
+	private final CommandFactory<CatParameter> catCommand;
 	private final File playlistFile;
 
 	private final PlaybackQueue playbackQueue;
@@ -48,7 +49,7 @@ public class Goal {
 		Date goalTimestamp = new Date();
 		GoalId goalId = new GoalId(goalTimestamp, createNewId(goalTimestamp));
 		LOGGER.info("Goal {} scored.", goalId.getTitle());
-		catCommand.run(getPlaylistFiles(), goalId.getFilename()).waitFor();
+		catCommand.run(new CatParameter(getPlaylistFiles(), goalId.getFilename())).waitFor();
 		playbackQueue.queue(goalId);
 	}
 

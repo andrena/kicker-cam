@@ -1,5 +1,12 @@
 package de.andrena.kickercam.goal;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -9,26 +16,46 @@ import de.andrena.kickercam.command.CommandFactory;
 public class PlaybackQueue extends Queue<GoalId> {
 	static final Logger LOGGER = LogManager.getLogger(PlaybackQueue.class);
 
-	private CommandFactory playCommand;
-
+	private CommandFactory<GoalId> playCommand;
 	private final UploadQueue uploadQueue;
+	private final File workingDirectory;
 
-	public PlaybackQueue(CommandFactory playCommand, UploadQueue uploadQueue) {
+	public PlaybackQueue(CommandFactory<GoalId> playCommand, UploadQueue uploadQueue, File workingDirectory) {
 		this.playCommand = playCommand;
 		this.uploadQueue = uploadQueue;
+		this.workingDirectory = workingDirectory;
 	}
 
 	@Override
 	protected void execute(GoalId goalId) {
 		try {
-			LOGGER.trace("Playing video: {}", goalId.getFilename());
-			playCommand.run(goalId.getFilename()).waitFor();
-			LOGGER.trace("Finished playing video: {}", goalId.getFilename());
+			File subtitleFile = createSubtitleFile(goalId);
+			playVideo(goalId);
+			subtitleFile.delete();
 			uploadQueue.queue(goalId);
-
-		} catch (InterruptedException | CommandException e) {
+		} catch (Exception e) {
 			LOGGER.error("Playback failed.", e);
 		}
 	}
 
+	private void playVideo(GoalId goalId) throws InterruptedException, CommandException {
+		LOGGER.trace("Playing video: {}", goalId.getFilename());
+		playCommand.run(goalId).waitFor();
+		LOGGER.trace("Finished playing video: {}", goalId.getFilename());
+	}
+
+	private File createSubtitleFile(GoalId goalId) throws IOException {
+		File subtitleFile = new File(workingDirectory, goalId.getSubtitleFilename());
+		subtitleFile.createNewFile();
+		FileUtils.writeLines(subtitleFile, createSubtitleInfo(goalId));
+		return subtitleFile;
+	}
+
+	private Collection<?> createSubtitleInfo(GoalId goalId) {
+		List<String> subtitleInfo = new ArrayList<>();
+		subtitleInfo.add("1");
+		subtitleInfo.add("00:00:00,000 --> 00:00:04,000");
+		subtitleInfo.add("#" + goalId.getId());
+		return subtitleInfo;
+	}
 }

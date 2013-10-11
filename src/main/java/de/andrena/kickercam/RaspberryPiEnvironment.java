@@ -3,12 +3,13 @@ package de.andrena.kickercam;
 import java.io.File;
 
 import de.andrena.kickercam.command.CatCommandFactory;
+import de.andrena.kickercam.command.CatParameter;
 import de.andrena.kickercam.command.Command;
 import de.andrena.kickercam.command.CommandFactory;
 import de.andrena.kickercam.command.PlayCommandFactory;
 import de.andrena.kickercam.command.RecordCommand;
 import de.andrena.kickercam.command.RmCommandFactory;
-import de.andrena.kickercam.command.ShellCatCommandFactory;
+import de.andrena.kickercam.goal.GoalId;
 import de.andrena.kickercam.goal.PlaybackQueue;
 import de.andrena.kickercam.goal.UploadQueue;
 import de.andrena.kickercam.gpio.Gpio;
@@ -22,11 +23,12 @@ public class RaspberryPiEnvironment implements Environment {
 	private RecordCommand recordCommand = new RecordCommand(WORKING_DIRECTORY);
 	private PlayCommandFactory playCommandFactory = new PlayCommandFactory(WORKING_DIRECTORY);
 	private RmCommandFactory rmCommandFactory = new RmCommandFactory(WORKING_DIRECTORY);
-	private ShellCatCommandFactory catCommandFactory = new ShellCatCommandFactory(WORKING_DIRECTORY);
+	private CatCommandFactory catCommandFactory = new CatCommandFactory(WORKING_DIRECTORY);
 	private GpioAdapter gpioAdapter = new GpioAdapter();
 	private YoutubeVideoUploader videoUploader = new YoutubeVideoUploader(WORKING_DIRECTORY);
 	private UploadQueue uploadQueue = new UploadQueue(rmCommandFactory, videoUploader);
-	private PlaybackQueue playbackQueue = new PlaybackQueue(playCommandFactory, uploadQueue);
+	private PlaybackQueue playbackQueue = new PlaybackQueue(playCommandFactory, uploadQueue,
+			WORKING_DIRECTORY);
 	private SqliteDatabase database = new SqliteDatabase(WORKING_DIRECTORY);;
 
 	@Override
@@ -35,17 +37,17 @@ public class RaspberryPiEnvironment implements Environment {
 	}
 
 	@Override
-	public CommandFactory getPlayCommand() {
+	public CommandFactory<GoalId> getPlayCommand() {
 		return playCommandFactory;
 	}
 
 	@Override
-	public CommandFactory getRmCommand() {
+	public CommandFactory<GoalId> getRmCommand() {
 		return rmCommandFactory;
 	}
 
 	@Override
-	public CatCommandFactory getCatCommandFactory() {
+	public CommandFactory<CatParameter> getCatCommandFactory() {
 		return catCommandFactory;
 	}
 

@@ -8,9 +8,10 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
+import de.andrena.kickercam.command.CatParameter;
+import de.andrena.kickercam.goal.GoalId;
 import de.andrena.kickercam.goal.PlaybackQueue;
 import de.andrena.kickercam.goal.UploadQueue;
-import de.andrena.kickercam.mock.CatCommandFactoryMock;
 import de.andrena.kickercam.mock.CommandFactoryMock;
 import de.andrena.kickercam.mock.CommandMock;
 import de.andrena.kickercam.mock.GpioMock;
@@ -19,9 +20,9 @@ import de.andrena.kickercam.mock.VideoUploaderMock;
 public class TestEnvironment extends ExternalResource implements Environment {
 
 	private CommandMock recordCommandMock = new CommandMock();
-	private CommandFactoryMock playCommandMock = new CommandFactoryMock();
-	private CommandFactoryMock rmCommandMock = new CommandFactoryMock();
-	private CatCommandFactoryMock catCommandFactoryMock = new CatCommandFactoryMock();
+	private CommandFactoryMock<GoalId> playCommandMock = new CommandFactoryMock<>();
+	private CommandFactoryMock<GoalId> rmCommandMock = new CommandFactoryMock<>();
+	private CommandFactoryMock<CatParameter> catCommandFactoryMock = new CommandFactoryMock<>();
 	private GpioMock gpioMock = new GpioMock();
 	private File playlistFile;
 
@@ -29,7 +30,7 @@ public class TestEnvironment extends ExternalResource implements Environment {
 	private PlaybackQueue playbackQueue;
 	private UploadQueue uploadQueue;
 	private VideoUploaderMock videoUploaderMock;
-	private File temporaryFolder;
+	private File workingDirectory;
 	private SqliteDatabase database;
 
 	@Override
@@ -39,13 +40,13 @@ public class TestEnvironment extends ExternalResource implements Environment {
 
 	@Override
 	protected void before() throws Throwable {
-		temporaryFolder = temporaryFolderRule.newFolder();
-		playlistFile = new File(temporaryFolder, "playlist.file");
+		workingDirectory = temporaryFolderRule.newFolder();
+		playlistFile = new File(workingDirectory, "playlist.file");
 		playlistFile.createNewFile();
 		videoUploaderMock = new VideoUploaderMock();
 		uploadQueue = new UploadQueue(rmCommandMock, videoUploaderMock);
-		playbackQueue = new PlaybackQueue(playCommandMock, uploadQueue);
-		database = new SqliteDatabase(temporaryFolder);
+		playbackQueue = new PlaybackQueue(playCommandMock, uploadQueue, workingDirectory);
+		database = new SqliteDatabase(workingDirectory);
 		initializeDatabase(database);
 	}
 
@@ -55,17 +56,17 @@ public class TestEnvironment extends ExternalResource implements Environment {
 	}
 
 	@Override
-	public CommandFactoryMock getPlayCommand() {
+	public CommandFactoryMock<GoalId> getPlayCommand() {
 		return playCommandMock;
 	}
 
 	@Override
-	public CommandFactoryMock getRmCommand() {
+	public CommandFactoryMock<GoalId> getRmCommand() {
 		return rmCommandMock;
 	}
 
 	@Override
-	public CatCommandFactoryMock getCatCommandFactory() {
+	public CommandFactoryMock<CatParameter> getCatCommandFactory() {
 		return catCommandFactoryMock;
 	}
 
@@ -102,6 +103,10 @@ public class TestEnvironment extends ExternalResource implements Environment {
 	@Override
 	public Database getDatabase() {
 		return database;
+	}
+
+	public File getWorkingDirectory() {
+		return workingDirectory;
 	}
 
 	private void initializeDatabase(SqliteDatabase database) {

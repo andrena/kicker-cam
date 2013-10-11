@@ -31,6 +31,11 @@ public class GoalIdTest {
 	}
 
 	@Test
+	public void getSubtitleFilename_HasCorrectDate() throws Exception {
+		assertThat(goalId.getSubtitleFilename(), is("2013Oct14_000000-000.srt"));
+	}
+
+	@Test
 	public void getTitle_HasCorrectDate() throws Exception {
 		assertThat(goalId.getTitle(), is("#17 - 14.10.2013 00:00:00"));
 	}

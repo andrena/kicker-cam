@@ -49,7 +49,8 @@ public class GoalTest {
 		environment.getPlayCommand().setDelay(100);
 		goal.fire();
 		createGoal().fire();
-		assertThat(environment.getCatCommandFactory().getLastPlaylistFiles(), contains(CORRECT_PLAYLIST));
+		assertThat(environment.getCatCommandFactory().getLastParameter().getPlaylistFiles(),
+				contains(CORRECT_PLAYLIST));
 	}
 
 	@Test

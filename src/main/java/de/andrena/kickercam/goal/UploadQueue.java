@@ -9,10 +9,10 @@ import de.andrena.kickercam.command.CommandFactory;
 public class UploadQueue extends Queue<GoalId> {
 	static final Logger LOGGER = LogManager.getLogger(PlaybackQueue.class);
 
-	private CommandFactory rmCommand;
+	private CommandFactory<GoalId> rmCommand;
 	private VideoUploader videoUploader;
 
-	public UploadQueue(CommandFactory rmCommand, VideoUploader videoUploader) {
+	public UploadQueue(CommandFactory<GoalId> rmCommand, VideoUploader videoUploader) {
 		this.rmCommand = rmCommand;
 		this.videoUploader = videoUploader;
 	}
@@ -23,7 +23,7 @@ public class UploadQueue extends Queue<GoalId> {
 			LOGGER.trace("Uploading video: {}", goalId.getFilename());
 			videoUploader.uploadVideo(goalId);
 			LOGGER.trace("Finished uploading video: {}", goalId.getFilename());
-			rmCommand.run(goalId.getFilename());
+			rmCommand.run(goalId);
 		} catch (CommandException e) {
 			LOGGER.error("Uploading failed.", e);
 		}

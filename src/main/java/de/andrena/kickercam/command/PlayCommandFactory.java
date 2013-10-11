@@ -2,7 +2,9 @@ package de.andrena.kickercam.command;
 
 import java.io.File;
 
-public class PlayCommandFactory implements CommandFactory {
+import de.andrena.kickercam.goal.GoalId;
+
+public class PlayCommandFactory implements CommandFactory<GoalId> {
 
 	private final File workingDirectory;
 
@@ -11,8 +13,8 @@ public class PlayCommandFactory implements CommandFactory {
 	}
 
 	@Override
-	public Process run(String mergedVideoFilename) throws CommandException {
-		return new ShellCommand("omxplayer " + mergedVideoFilename, workingDirectory).run();
+	public Process run(GoalId goalId) throws CommandException {
+		return new ShellCommand("omxplayer --subtitle " + goalId.getSubtitleFilename() + " "
+				+ goalId.getFilename(), workingDirectory).run();
 	}
-
 }

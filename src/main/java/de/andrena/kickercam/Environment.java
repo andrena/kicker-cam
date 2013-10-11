@@ -2,9 +2,10 @@ package de.andrena.kickercam;
 
 import java.io.File;
 
-import de.andrena.kickercam.command.CatCommandFactory;
+import de.andrena.kickercam.command.CatParameter;
 import de.andrena.kickercam.command.Command;
 import de.andrena.kickercam.command.CommandFactory;
+import de.andrena.kickercam.goal.GoalId;
 import de.andrena.kickercam.goal.PlaybackQueue;
 import de.andrena.kickercam.goal.UploadQueue;
 import de.andrena.kickercam.gpio.Gpio;
@@ -13,11 +14,11 @@ public interface Environment {
 
 	Command getRecordCommand();
 
-	CommandFactory getPlayCommand();
+	CommandFactory<GoalId> getPlayCommand();
 
-	CommandFactory getRmCommand();
+	CommandFactory<GoalId> getRmCommand();
 
-	CatCommandFactory getCatCommandFactory();
+	CommandFactory<CatParameter> getCatCommandFactory();
 
 	Gpio getGpio();
 

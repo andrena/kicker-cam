@@ -1,6 +1,5 @@
 package de.andrena.kickercam.command;
 
-
-public interface CommandFactory {
-	Process run(String parameter) throws CommandException;
+public interface CommandFactory<T> {
+	Process run(T parameter) throws CommandException;
 }
