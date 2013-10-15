@@ -48,7 +48,7 @@ public class Goal {
 	private void fireTriggerUnsafe() throws Exception {
 		Date goalTimestamp = new Date();
 		GoalId goalId = new GoalId(goalTimestamp, createNewId(goalTimestamp));
-		LOGGER.info("Goal {} scored.", goalId.getTitle());
+		LOGGER.info("Goal {} scored.", goalId);
 		catCommand.run(new CatParameter(getPlaylistFiles(), goalId.getFilename())).waitFor();
 		playbackQueue.queue(goalId);
 	}

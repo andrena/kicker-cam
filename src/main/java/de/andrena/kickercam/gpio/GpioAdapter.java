@@ -12,15 +12,15 @@ import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
 public class GpioAdapter implements Gpio {
 	private GpioController gpio = GpioFactory.getInstance();
-	private GpioPinDigitalOutput inputPin3 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_03);
+	private GpioPinDigitalOutput outputPin3 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_03);
 
 	@Override
 	public void enablePin3() {
-		gpio.setState(true, inputPin3);
+		gpio.setState(true, outputPin3);
 	}
 
 	public boolean getPin3State() {
-		return gpio.getState(inputPin3).isHigh();
+		return gpio.getState(outputPin3).isHigh();
 	}
 
 	@Override

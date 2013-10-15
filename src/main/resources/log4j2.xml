@@ -4,10 +4,19 @@
 		<Console name="Console" target="SYSTEM_OUT">
 			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
 		</Console>
+		<RollingRandomAccessFile name="RollingRandomAccessFile"
+			fileName="/home/balotelli/kicker/logs/kicker.log" filePattern="/home/balotelli/kicker/logs/kicker-%d{yyyy-MM-dd}-%i.log.gz">
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="100 MB" />
+			</Policies>
+		</RollingRandomAccessFile>
 	</Appenders>
 	<Loggers>
 		<Root level="info">
 			<AppenderRef ref="Console" />
+			<AppenderRef ref="RollingRandomAccessFile" />
 		</Root>
 	</Loggers>
 </Configuration>

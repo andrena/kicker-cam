@@ -20,9 +20,9 @@ public class UploadQueue extends Queue<GoalId> {
 	@Override
 	protected void execute(GoalId goalId) {
 		try {
-			LOGGER.trace("Uploading video: {}", goalId.getFilename());
+			LOGGER.info("Uploading video: {}", goalId.getFilename());
 			videoUploader.uploadVideo(goalId);
-			LOGGER.trace("Finished uploading video: {}", goalId.getFilename());
+			LOGGER.info("Finished uploading video: {}", goalId.getFilename());
 			rmCommand.run(goalId);
 		} catch (CommandException e) {
 			LOGGER.error("Uploading failed.", e);

@@ -12,16 +12,19 @@ import org.apache.logging.log4j.Logger;
 
 import de.andrena.kickercam.command.CommandException;
 import de.andrena.kickercam.command.CommandFactory;
+import de.andrena.kickercam.command.ProcessRunnerWithTimeout;
 
 public class PlaybackQueue extends Queue<GoalId> {
+	private static final int PLAYBACK_TIMEOUT = 12000;
+
 	static final Logger LOGGER = LogManager.getLogger(PlaybackQueue.class);
 
-	private CommandFactory<GoalId> playCommand;
+	private ProcessRunnerWithTimeout<GoalId> playCommandRunner;
 	private final UploadQueue uploadQueue;
 	private final File workingDirectory;
 
 	public PlaybackQueue(CommandFactory<GoalId> playCommand, UploadQueue uploadQueue, File workingDirectory) {
-		this.playCommand = playCommand;
+		this.playCommandRunner = new ProcessRunnerWithTimeout<>(playCommand);
 		this.uploadQueue = uploadQueue;
 		this.workingDirectory = workingDirectory;
 	}
@@ -39,9 +42,9 @@ public class PlaybackQueue extends Queue<GoalId> {
 	}
 
 	private void playVideo(GoalId goalId) throws InterruptedException, CommandException {
-		LOGGER.trace("Playing video: {}", goalId.getFilename());
-		playCommand.run(goalId).waitFor();
-		LOGGER.trace("Finished playing video: {}", goalId.getFilename());
+		LOGGER.info("Playing video: {}", goalId.getFilename());
+		playCommandRunner.run(goalId, PLAYBACK_TIMEOUT);
+		LOGGER.info("Finished playing video: {}", goalId.getFilename());
 	}
 
 	private File createSubtitleFile(GoalId goalId) throws IOException {
